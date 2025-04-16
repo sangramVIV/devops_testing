@@ -1,0 +1,47 @@
+---
+- name: Install Docker on Amazon Linux and CentOS
+  hosts: docker_hosts
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Install Docker on Amazon Linux
+      when: ansible_distribution == "Amazon"
+      block:
+        - name: Install Docker
+          yum:
+            name: docker
+            state: present
+
+        - name: Start and enable Docker
+          systemd:
+            name: docker
+            enabled: yes
+            state: started
+
+    - name: Install Docker on CentOS
+      when: ansible_distribution == "CentOS"
+      block:
+        - name: Install required packages
+          yum:
+            name:
+              - yum-utils
+              - device-mapper-persistent-data
+              - lvm2
+            state: present
+
+        - name: Add Docker repo
+          get_url:
+            url: https://download.docker.com/linux/centos/docker-ce.repo
+            dest: /etc/yum.repos.d/docker-ce.repo
+
+        - name: Install Docker
+          yum:
+            name: docker-ce
+            state: present
+
+        - name: Start and enable Docker
+          systemd:
+            name: docker
+            enabled: yes
+            state: started
