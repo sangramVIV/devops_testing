@@ -1,0 +1,116 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR Public
+      run: |
+        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+
+    - name: Build Docker Image
+      run: |
+        REPO_URI="public.ecr.aws/i0h4r7u1/webserver_testing"
+        docker build ./myapp/ -t $REPO_URI:latest
+
+    - name: Push Docker Image to ECR
+      run: |
+        REPO_URI="public.ecr.aws/i0h4r7u1/webserver_testing"
+        docker push $REPO_URI:latest
+
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy  # This ensures this job runs after the image is built and pushed.
+
+    steps:
+    - name: Deploy to EC2 via SSH and Run Docker
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ec2-user
+            key: ${{ secrets.EC2_SSH_KEY }}
+            port: 22
+            script: |
+              IMAGE="public.ecr.aws/i0h4r7u1/webserver_testing:latest"
+            
+              # Start Docker service if not running
+              if ! systemctl is-active --quiet docker; then
+                echo "Starting Docker service..."
+                sudo systemctl start docker
+              else
+                echo "Docker is already running. Restarting it..."
+                sudo systemctl restart docker
+              fi
+            
+              # Pull latest image
+              sudo docker pull $IMAGE
+            
+              # Stop and remove existing container if exists
+              if [ "$(sudo docker ps -aq -f name=webserver_testing)" ]; then
+                echo "Stopping and removing existing container..."
+                sudo docker stop webserver_testing || true
+                sudo docker rm webserver_testing || true
+              fi
+            
+              # Run new container
+              echo "Starting new container..."
+              sudo docker run -d -p 80:3000 --name webserver_testing $IMAGE
+
+  deploy-to-ibm-cloud:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy  # This ensures this job runs after the image is built and pushed.
+
+    steps:
+    - name: Configure IBM Cloud CLI
+      run: |
+        curl -sL https://ibm.biz/idt-installer | bash
+        ibmcloud login --apikey ${{ secrets.IBM_API_KEY }} -r eu-de
+
+    - name: Deploy to IBM Cloud via SSH and Run Docker (IBM Cloud)
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+            host: ${{ secrets.IBM_CLOUD_HOST }}
+            username: root
+            key: ${{ secrets.IBM_CLOUD_SSH_KEY }}
+            port: 22
+            script: |
+              IMAGE="public.ecr.aws/i0h4r7u1/webserver_testing:latest"
+            
+              # Start Docker service if not running
+              if ! systemctl is-active --quiet docker; then
+                echo "Starting Docker service..."
+                sudo systemctl start docker
+              else
+                echo "Docker is already running. Restarting it..."
+                sudo systemctl restart docker
+              fi
+            
+              # Pull latest image
+              sudo docker pull $IMAGE
+            
+              # Stop and remove existing container if exists
+              if [ "$(sudo docker ps -aq -f name=webserver_testing)" ]; then
+                echo "Stopping and removing existing container..."
+                sudo docker stop webserver_testing || true
+                sudo docker rm webserver_testing || true
+              fi
+            
+              # Run new container
+              echo "Starting new container..."
+              sudo docker run -d -p 80:3000 --name webserver_testing $IMAGE
