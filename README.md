@@ -72,7 +72,7 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
 8. **Trigger GitHub Actions**
    - GitHub Actions will automatically run the pipeline or trigger it manually:
      ```bash
-     gh workflow run deploy.yml
+     gh workflow run ci_cd.yml
      ```
 
 9. **Access the Website**
