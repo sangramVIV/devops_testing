@@ -30,16 +30,16 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
    ```bash
    terraform init
    ```
-2.**Terraform plan**
-    ```bash
-   terraform init
-     ```
+2. **Terraform plan**
+   ```bash
+   terraform plan
+   ```
 
 3. **Apply Terraform Configuration**
    ```bash
    terraform apply
    ```
-   - Approve the plan when prompted.
+
 
 4. **Get Public IPs from Terraform Output**
    - Note the outputted IP addresses of both AWS and IBM Cloud instances.
@@ -52,12 +52,8 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
    ansible-playbook -i inventory.ini playbook.yml
    ```
 
-7. **Go to the GitHub Repository**
-   - Open the GitHub repo where this project is hosted.
-    [ci/cd using github action](https://github.com/sangramVIV/devops_testing)
 
-
-8. **Set Repository Secrets**
+7. **Set Repository Secrets for CI/CD pipeline using github action**
    - In your GitHub repository, go to:
      ```
      Settings → Secrets and Variables → Actions
@@ -73,20 +69,13 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
   - `IBM_CLOUD_SSH_KEY`
 
 
-9. **Commit and Push Changes**
-   ```bash
-   git add .
-   git commit -m "Updated IPs and config for deployment"
-   git push origin main
-   ```
-
-10. **Trigger GitHub Actions**
+8. **Trigger GitHub Actions**
    - GitHub Actions will automatically run the pipeline or trigger it manually:
      ```bash
      gh workflow run deploy.yml
      ```
 
-11. **Access the Website**
+9. **Access the Website**
    - Open an **incognito/private browser window**.
    - Enter the AWS EC2 public IP in the address bar.
    - You should see the deployed web application.
