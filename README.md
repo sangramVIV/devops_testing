@@ -61,11 +61,11 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
   - Add the following secrets:
   - `AWS_ACCESS_KEY_ID`
   - `AWS_SECRET_ACCESS_KEY`
-  - `EC2_HOST`
+  - `EC2_HOST` --EC2 PUBLIC IP
   - `EC2_SSH_KEY`
   - `EC2_USER`
   - `IBM_API_KEY`
-  - `IBM_CLOUD_HOST`
+  - `IBM_CLOUD_HOST` --VSI FLOATING IP (EVERY TIME  ASSIGN WITH NEW IP)
   - `IBM_CLOUD_SSH_KEY`
 
 
@@ -79,6 +79,7 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
    - Open an **incognito/private browser window**.
    - Enter the AWS EC2 public IP in the address bar.
    - You should see the deployed web application.
+     
 
    
 
