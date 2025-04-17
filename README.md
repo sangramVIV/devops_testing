@@ -61,11 +61,11 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
   - Add the following secrets:
   - `AWS_ACCESS_KEY_ID`
   - `AWS_SECRET_ACCESS_KEY`
-  - `EC2_HOST` --EC2 PUBLIC IP
+  - `EC2_HOST` -- EC2 PUBLIC IP
   - `EC2_SSH_KEY`
   - `EC2_USER`
   - `IBM_API_KEY`
-  - `IBM_CLOUD_HOST` --VSI FLOATING IP (EVERY TIME  ASSIGN WITH NEW IP)
+  - `IBM_CLOUD_HOST` -- VSI FLOATING IP (EVERY TIME  ASSIGN WITH A NEW IP)
   - `IBM_CLOUD_SSH_KEY`
 
 
@@ -79,9 +79,50 @@ Follow these steps to deploy the multi-cloud infrastructure and application:
    - Open an **incognito/private browser window**.
    - Enter the AWS EC2 public IP in the address bar.
    - You should see the deployed web application.
-     
-
-   
 
 
+
+
+
+
+
+## 🚀 Future Scope
+
+### 🔧 NGINX Installation & Reverse Proxy Setup
+
+ -NGINX Installation and Reverse Proxy Configuration
+ -Set up NGINX as a reverse proxy to route traffic to backend services (e.g., Node.js, Docker containers).
+
+ -Optimize performance with gzip compression, caching headers, and security hardening.
+
+ -Automate the NGINX configuration reload with zero downtime using:
+
+
+
+
+###  Blue-Green Deployment Using Docker
+   -Implement Blue-Green Deployment to achieve zero downtime deployments:
+
+   -Maintain two production environments (Blue = current live, Green = new build).
+
+   -Deploy new build to Green, run tests, and verify health checks.
+
+   -Switch live traffic from Blue to Green using:
+
+   -NGINX reverse proxy update
+
+   -Docker network alias changes
+
+   -Rollback instantly by switching back to Blue if errors occur.
+
+   -This approach improves reliability and enables quick recovery from failed deployments.
+
+
+
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+You are free to use, modify, and distribute this software with proper attribution. See the LICENSE file for full details.
 
