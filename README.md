@@ -25,16 +25,15 @@ Ensure the following are installed on your local machine
 
 Follow these steps to deploy the multi-cloud infrastructure and application:
 
-1. **Unzip the Project Files**
-   ```bash
-   unzip multicloud-devops-pipeline.zip
-   cd multicloud-devops-pipeline
-   ```
 
-2. **Initialize Terraform**
+1. **Initialize Terraform**
    ```bash
    terraform init
    ```
+2.**Terraform plan**
+    ```bash
+   terraform init
+     ```
 
 3. **Apply Terraform Configuration**
    ```bash
