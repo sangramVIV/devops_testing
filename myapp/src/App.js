@@ -53,7 +53,7 @@ function App() {
   return (
     <div style={styles.container}>
       <header style={styles.header}>
-        <h1>Welcome to  DEVOPS WORLD</h1>
+        <h1>WELCOME TO DEVOPS WORLD </h1>
       </header>
 
       <section style={styles.section}>
